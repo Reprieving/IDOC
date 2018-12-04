@@ -158,7 +158,7 @@ export default {
         .then(res => {
           const stateCode = res.stateCode;
           if (stateCode == 0) {
-            this.editNode = res.object;
+            this.editNode = res.data;
           } else {
             this.$message.error(res.message);
           }

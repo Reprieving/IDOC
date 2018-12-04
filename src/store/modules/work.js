@@ -26,7 +26,7 @@ const actions = {
         .then(res => {
           if (res.data.stateCode == "0") {
             let arrTmp = [];
-            arrTmp.push(res.data.object);
+            arrTmp.push(res.data.data);
             commit("setDocTree", arrTmp);
           }
           resolve(res.data);

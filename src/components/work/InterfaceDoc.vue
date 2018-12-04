@@ -187,7 +187,7 @@ export default {
     store
       .dispatch("work/getSubProject", {})
       .then(res => {
-        this.projectOptions = res.object;
+        this.projectOptions = res.data;
       })
       .catch(res => {});
   },
@@ -326,9 +326,9 @@ export default {
           var msgType = [];
           rspStateCode(res, msgType);
           if ("success" == msgType) {
-            this.editNode = res.object;
-            this.editNode.reqParamContent = JSON.parse(res.object.reqParamContent);
-            this.editNode.rspParamContent = JSON.parse(res.object.rspParamContent);
+            this.editNode = res.data;
+            this.editNode.reqParamContent = JSON.parse(res.data.reqParamContent);
+            this.editNode.rspParamContent = JSON.parse(res.data.rspParamContent);
           } else {
             this.$message({
               message: res.message,

@@ -14,6 +14,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     mode: "login",
+    loginToken:"",
     permissionList: [],
     activeTabName: "main",
     tabList: [
@@ -31,6 +32,9 @@ export default new Vuex.Store({
   },
   getters: {},
   mutations: {
+    setLoginToken(state, data){
+      state.loginToken = data;
+    },
     setMode: (state, data) => {
       state.mode = data;
     },
@@ -43,9 +47,9 @@ export default new Vuex.Store({
     addTab(state, index) {
       if (state.tabList.filter(f => f.name == index) == 0) {
         let tabNo = []
-        findNodeInPermisTree(tabNo,state.permissionList,index)
+        findNodeInPermisTree(tabNo, state.permissionList, index)
         let component = () =>
-          import("@/components/"+tabNo[0].module+"/" + tabNo[0].component + ".vue");
+          import("@/components/" + tabNo[0].module + "/" + tabNo[0].component + ".vue");
         state.tabList.push({
           label: index,
           name: index,
@@ -77,7 +81,7 @@ export default new Vuex.Store({
       }
       funcChil.push(newChild);
     },
-    setFuncTreeNode(state,data){
+    setFuncTreeNode(state, data) {
       state.functionTree = data;
     },
     addDptTreeNode(state, data) {
@@ -92,7 +96,7 @@ export default new Vuex.Store({
       }
       funcChil.push(newChild);
     },
-    setDptTreeNode(state,data){
+    setDptTreeNode(state, data) {
       state.departmentTree = data;
     }
   },
@@ -102,11 +106,16 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios_form
           .post(
-            apiUrl+"function/subsFuncTree",
-            { id: subscriber.subscriberId },
+            apiUrl + "subscriber/login",
+            {
+              userName: subscriber.userName,
+              password: subscriber.password,
+            },
           )
           .then(res => {
-            commit("setPermissionList", res.data.children);
+            let subscriberInfo = res.data.data;
+            commit("setLoginToken",subscriberInfo.loginToken);
+            commit("setPermissionList",  subscriberInfo.funcTreeNode.children);
             resolve(res.data);
           })
           .catch(() => {
@@ -125,15 +134,15 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios_form
           .post(
-            apiUrl+"function/create",
-            { 
+            apiUrl + "function/create",
+            {
               parentId: data.appendParentNodeId,
-              moduleName:newNode.moduleName,
-              functionName:newNode.functionName,
-              component:newNode.component,
-              url:newNode.url,
-              isMenu:newNode.isMenu,
-              isValid:newNode.isValid
+              moduleName: newNode.moduleName,
+              functionName: newNode.functionName,
+              component: newNode.component,
+              url: newNode.url,
+              isMenu: newNode.isMenu,
+              isValid: newNode.isValid
             },
           )
           .then(res => {
@@ -148,12 +157,12 @@ export default new Vuex.Store({
           });
       });
     },
-    viewFunc({commit,state},data){
-      return new Promise((resolve,reject)=>{
+    viewFunc({ commit, state }, data) {
+      return new Promise((resolve, reject) => {
         axios_form
           .post(
-            apiUrl+"function/info",
-            { id: data.fucId},
+            apiUrl + "function/info",
+            { id: data.fucId },
           )
           .then(res => {
             resolve(res.data);
@@ -169,11 +178,11 @@ export default new Vuex.Store({
         newNode: data.newNode
       });
     },
-    getFunctionTree({ commit, state }, subscriber){
+    getFunctionTree({ commit, state }, subscriber) {
       return new Promise((resolve, reject) => {
         axios_form
           .post(
-            apiUrl+"function/allFuncTree",
+            apiUrl + "function/allFuncTree",
             { id: subscriber.subscriberId },
           )
           .then(res => {
@@ -190,7 +199,7 @@ export default new Vuex.Store({
 
   },
   modules: {
-    work:work
+    work: work
     // tab: Tab
   }
 });

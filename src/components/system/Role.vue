@@ -15,15 +15,14 @@
           <el-form-item label="Role Name">
             <el-input v-model="newNode.roleName"></el-input>
           </el-form-item>
-          <el-form-item label="Real Name">
-            <el-input v-model="newNode.moduleName"></el-input>
-          </el-form-item>
           <el-form-item label="Function">
             <el-input
                 placeholder="Function Name"
                 v-model="filterText">
             </el-input>
-            <el-tree :data="funcTree" node-key="id" default-expand-all :expand-on-click-node="false" :filter-node-method="filterNode" ref="tree">
+            <el-tree :data="funcTree" show-checkbox node-key="id" default-expand-all 
+            :expand-on-click-node="false" :filter-node-method="filterNode" @check-change="handleCheckChange"
+            ref="tree">
               <span class="custom-tree-node" slot-scope="{ node, data }">
                 <span>{{ node.label }}</span>
               </span>
@@ -121,6 +120,9 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection();
       }
+    },
+    handleCheckChange(data, checked, indeterminate) {
+      console.log(data, checked, indeterminate);
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;

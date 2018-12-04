@@ -3,6 +3,7 @@
  */
 import axios from 'axios'
 import apiURL from './url.js'
+import store from "@/store";
 
 // axios默认配置
 axios.defaults.timeout = 10000;   // 超时时间
@@ -27,7 +28,8 @@ axios.interceptors.request.use(
   config => {
     //config.data = JSON.stringify(config.data);  
     config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-    
+    config.headers['accessToken'] = store.state.loginToken
+
     return config;
   },
   error => {

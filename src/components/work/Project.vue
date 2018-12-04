@@ -81,7 +81,7 @@ export default {
     store
       .dispatch("work/getSubProject", {})
       .then(res => {
-        this.options = res.object;
+        this.options = res.data;
         // console.log(res);
       })
       .catch(res => {
